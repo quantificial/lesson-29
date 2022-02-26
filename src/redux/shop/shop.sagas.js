@@ -14,12 +14,23 @@ import ShopActionTypes from './shop.types';
 
 export function* fetchCollections() {
   try {
-    const collectionRef = firestore.collection('collections');
-    const snapshot = yield collectionRef.get();
-    const collectionsMap = yield call(
-      convertCollectionsSnapshotToMap,
-      snapshot
-    );
+    const collectionRef = yield firestore.collection('collections');
+    //const snapshot = yield collectionRef.get();
+    // const collectionsMap = yield call(
+    //   convertCollectionsSnapshotToMap,
+    //   snapshot
+    // );
+
+
+    //const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+    var collectionsMap = null;
+
+    yield collectionRef
+    .get()
+    .then(snapshot => {
+     collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+    });
+
     yield put(fetchCollectionsSuccess(collectionsMap));
   } catch (error) {
     yield put(fetchCollectionsFailure(error.message));
